@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:1.24.0-alpine
+    container_name: nginx
+    ports:
+      - '80:80'
+    volumes:
+      - ./laravel/public:/var/www/public
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - laravel_docker_template
+
+  laravel:
+    build:
+      context: .
+      dockerfile: ./laravel/Dockerfile
+    container_name: laravel
+    volumes:
+      - ./laravel:/var/www
+    networks:
+      - laravel_docker_template
+
+  postgresql:
+    image: postgres:15.3-alpine
+    container_name: postgresql
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: laravel_docker_template
+      POSTGRES_PASSWORD: 12345
+    networks:
+      - laravel_docker_template
+
+networks:
+  laravel_docker_template:
+
+volumes:
+  postgresql_data:
