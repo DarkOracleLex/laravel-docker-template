@@ -2,8 +2,16 @@ FROM php:8.1-fpm-alpine
 
 WORKDIR /var/www
 
+# Устанавливанием необходимые пакеты
 RUN apk update && apk add \
-    shadow
+    shadow \
+    libpq-dev
+
+# Устанавливаем composer
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+
+# Устанавливаем необходимые php расширения
+RUN docker-php-ext-install pdo pdo_pgsql
 
 # Создаём пользователя и группу www для приложения Laravel
 RUN groupadd -g 1000 www

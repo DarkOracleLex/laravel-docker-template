@@ -7,18 +7,18 @@ services:
     ports:
       - '80:80'
     volumes:
-      - ./laravel/public:/var/www/public
-      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./src/laravel/public:/var/www/public
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
     networks:
       - laravel_docker_template
 
-  laravel:
+  php:
     build:
       context: .
-      dockerfile: ./laravel/Dockerfile
-    container_name: laravel
+      dockerfile: ./docker/php/Dockerfile
+    container_name: php
     volumes:
-      - ./laravel:/var/www
+      - ./src/laravel:/var/www
     networks:
       - laravel_docker_template
 
