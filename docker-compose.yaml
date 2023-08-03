@@ -19,6 +19,10 @@ services:
     container_name: php
     volumes:
       - ./src/laravel:/var/www
+    depends_on:
+      - nginx
+      - postgresql
+      - redis
     networks:
       - laravel_docker_template
 
@@ -31,6 +35,7 @@ services:
       - '5432:5432'
     environment:
       POSTGRES_DB: laravel_docker_template
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 12345
     networks:
       - laravel_docker_template
@@ -40,8 +45,21 @@ services:
     container_name: adminer
     ports:
       - "8080:8080"
+    depends_on:
+      - postgresql
     environment:
       ADMINER_DEFAULT_SERVER: postgresql
+    networks:
+      - laravel_docker_template
+
+  redis:
+    image: redis:7.0.12-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning --requirepass 12345
+    volumes:
+      - redis_data:/data
     networks:
       - laravel_docker_template
 
@@ -50,3 +68,4 @@ networks:
 
 volumes:
   postgresql_data:
+  redis_data:
