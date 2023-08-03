@@ -5,7 +5,11 @@ WORKDIR /var/www
 # Устанавливанием необходимые пакеты
 RUN apk update && apk add \
     shadow \
-    libpq-dev
+    libpq-dev \
+    npm
+
+# Глобально устанавливаем laravel-echo-server
+RUN npm install -g laravel-echo-server
 
 # Устанавливаем composer
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
