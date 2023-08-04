@@ -3,7 +3,8 @@ FROM php:8.1-fpm-alpine
 WORKDIR /var/www
 
 # Устанавливанием необходимые пакеты
-RUN apk update && apk add \
+RUN apk update && apk add --no-cache \
+    bash \
     shadow \
     libpq-dev \
     npm
